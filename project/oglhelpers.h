@@ -12,10 +12,8 @@
 #include <string>
 #include <math.h>
 
-#define DEGTORAD M_PI/180.0f  // Grados a radianes
-
-void DrawString(std::string);
-void DrawLine(GLfloat, GLfloat, GLfloat, GLfloat);
-
+void drawString(std::string);
+void drawLine(GLfloat, GLfloat, GLfloat, GLfloat);
+void drawTriangle(float x, float y, float theta, float sideLength);
 
 #endif /* OGLHELPERS_H_ */

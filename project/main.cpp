@@ -16,6 +16,7 @@
 
 #include "oglhelpers.h"
 #include "LSystem.h"
+#include "Flock.h"
 
 
 #define WINDOW_TITLE_PREFIX "Alife"
@@ -34,8 +35,9 @@ int cameraY = 0;
 int cameraZ = 0;
 
 vector<LSystem> lsystems;
+Flock flock;
 
-
+void drawWalls(bool);
 void createTrees(int);
 static void display(void);
 static void key(unsigned char, int, int);
@@ -59,11 +61,25 @@ int main(int argc, char *argv[]){
 
     createTrees(4);
 
+    flock = Flock();
+    // Add an initial set of boids into the system
+    for (int i = 0; i < 150; i++) {
+        flock.addBoid( Turtle(VIEW_WIDTH/2, VIEW_WIDTH/2) );
+    }
+
     glutMainLoop();
 
     return EXIT_SUCCESS;
 }
+void drawWalls(bool draw){
+    if( draw ){
+        drawLine(0, 0, 0, VIEW_HEIGHT);
+        drawLine(0, 0, VIEW_WIDTH, 0);
+        drawLine(0, VIEW_HEIGHT, VIEW_WIDTH, VIEW_HEIGHT);
+        drawLine(VIEW_WIDTH, 0, VIEW_WIDTH, VIEW_HEIGHT);
+    }
 
+}
 void createTrees(int numTrees){
     for( int i = 0; i < numTrees; i++ ){
         LSystem ls = LSystem(VIEW_WIDTH, VIEW_HEIGHT, true);
@@ -80,30 +96,17 @@ static void display(void){
     glTranslatef(0, cameraY, 0);
 
     glRasterPos2f(20, VIEW_HEIGHT - 55);
-    DrawString("Crecer arbol: Key +");
+    drawString("Crecer arbol: Key +");
     glRasterPos2f(VIEW_WIDTH/2 - 50, VIEW_HEIGHT - 40);
-    DrawString("L-SYSTEM 2D");
+    drawString("L-SYSTEM 2D");
 
-    DrawLine(0, 0, 0, VIEW_HEIGHT);
-    DrawLine(0, 0, VIEW_WIDTH, 0);
-    DrawLine(0, VIEW_HEIGHT, VIEW_WIDTH, VIEW_HEIGHT);
-    DrawLine(0, VIEW_HEIGHT, VIEW_WIDTH, VIEW_HEIGHT);
-    DrawLine(VIEW_WIDTH, 0, VIEW_WIDTH, VIEW_HEIGHT);
-
+    drawWalls(true);
+    
     for(int i = 0; i < lsystems.size(); i++){
         lsystems[i].draw();
-    }
-    glTranslatef(50, 50, 0);
-    glRotatef(180, 0, 0, 1);
+    }    
 
-    glBegin(GL_TRIANGLES);
-        glColor3f(1, 1, 1);
-        glVertex3f(0, 0, 0);
-        glVertex3f(10, 0, 0);
-        glVertex3f(0, 10, 0);
-    glEnd();
-    glTranslatef(-50, -50, 0);
-    
+    flock.run(VIEW_WIDTH, VIEW_HEIGHT);
 
     ++FrameCount;
 

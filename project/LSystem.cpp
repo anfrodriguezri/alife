@@ -19,9 +19,6 @@
 
 using namespace std;
 
-const float width = 800;
-const float height = 750;
-
 LSystem::LSystem(){}
 LSystem::LSystem(float x, float y, bool maximumVals){
     if( maximumVals ){
@@ -59,7 +56,7 @@ void LSystem::generateWord(){
 };
 void LSystem::draw(){
     float x0, y0;
-    tie(x0, y0) = position;
+    tie(x0, y0) = position.getTuple();
     
     float x1 = x0;
     float y1 = y0;
@@ -80,7 +77,7 @@ void LSystem::draw(){
                 x1 = x0 + lineLength * cos( angleRot * DEGTORAD );
                 y1 = y0 + lineLength * sin( angleRot * DEGTORAD );
                 
-                DrawLine(x0, y0, x1, y1);
+                drawLine(x0, y0, x1, y1);
                 x0 = x1;
                 y0 = y1;
                 break;
@@ -90,7 +87,7 @@ void LSystem::draw(){
                 savedStates.push(currentTurtle);
                 break;
             case ']':
-                tie(x0, y0) = savedStates.top().getPosition();
+                tie(x0, y0) = savedStates.top().getPosition().getTuple();
                 x1 = x0;
                 y1 = y0;
                 angleRot = savedStates.top().getAngle();

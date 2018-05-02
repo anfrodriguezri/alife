@@ -1,9 +1,3 @@
-/*
- * Turtle.h
- *
- *  Created on: Apr 30, 2018
- *      Author: anfrodriguezri
- */
 #ifndef TURTLE_H_
 #define TURTLE_H_
 
@@ -15,13 +9,19 @@ using namespace std;
 
 class Turtle : public Figure {
 	protected:
-		tuple<float, float> velocity;
-		tuple<float, float> acceleration;
+		Vector2d velocity;
+		Vector2d acceleration;
 		float maxForce; // max steering force to change velocity direction
 		float maxSpeed;
+		float sideLength = 2.0;
 	public:
 		Turtle();
 		Turtle(float, float);
+		void applyForce(Vector2d);
+		void update();
+		void borders(float, float);
+		void render();
+		void run(float, float);
 		virtual ~Turtle();
 };
 

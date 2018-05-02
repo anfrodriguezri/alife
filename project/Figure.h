@@ -1,22 +1,15 @@
-/*
- * Figure.h
- *
- *  Created on: Apr 30, 2018
- *      Author: anfrodriguezri
- */
-
 #ifndef FIGURE_H_
 #define FIGURE_H_
 
 #include <tuple>
 
-using namespace std;
+#include "Vector2d.h"
 
-typedef tuple<float, float> Vector2d;
+using namespace std;
 
 class Figure {
 	protected:
-        tuple<float, float> position;
+        Vector2d position;
         float angle;
 
     public:
