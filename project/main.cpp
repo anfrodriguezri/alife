@@ -12,6 +12,7 @@
 #include <cstring>
 #include <vector>
 #include <iterator>
+#include <tuple>
 
 #include "oglhelpers.h"
 #include "LSystem.h"
@@ -56,7 +57,7 @@ int main(int argc, char *argv[]){
     glutIdleFunc( idle );
     glClearColor(0, 0, 0, 1);
 
-    createTrees(3);
+    createTrees(4);
 
     glutMainLoop();
 

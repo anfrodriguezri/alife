@@ -12,6 +12,8 @@
 
 using namespace std;
 
+typedef tuple<float, float> Vector2d;
+
 class Figure {
 	protected:
         tuple<float, float> position;
@@ -20,11 +22,13 @@ class Figure {
     public:
         Figure();
         virtual ~Figure();
-        float getX();
-        float getY();
+        float getX(Vector2d);
+        float getY(Vector2d);
         float getAngle();
-        void setX(float);
-        void setY(float);
+        void setX(float, Vector2d&);
+        void setY(float, Vector2d&);
+        Vector2d getPosition();
+        void setPosition(float, float);
         void setAngle(float);
 };
 #endif /* FIGURE_H_ */

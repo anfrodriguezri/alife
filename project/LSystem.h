@@ -25,7 +25,7 @@ class LSystem : public Figure {
         float lineLength = 1.0;
 	public:
 		LSystem();
-		LSystem(float, float, int);
+		LSystem(float, float, bool);
 		LSystem(int, float, string, vector< pair<char, string> >);
 		float getLineLength();
 		void setLineLength(float);

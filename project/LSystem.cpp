@@ -15,21 +15,22 @@
 #include "Figure.h"
 #include "Turtle.h"
 
+#include <iostream>
+
 using namespace std;
 
 const float width = 800;
 const float height = 750;
 
 LSystem::LSystem(){}
-LSystem::LSystem(float x, float y, int maximumVals){
+LSystem::LSystem(float x, float y, bool maximumVals){
     if( maximumVals ){
         float randx = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
         float randy = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
         x = (randx * x + 0);
         y = (randy * y + 0);
     }
-    setX(x);
-    setY(y);
+    setPosition(x, y);
 }
 LSystem::LSystem(int depth, float angle, string axiom, vector<pair<char, string>> rules){
     setParams(depth, angle, axiom, rules);
@@ -57,8 +58,9 @@ void LSystem::generateWord(){
     }
 };
 void LSystem::draw(){
-    float x0 = getX();
-    float y0 = getY();
+    float x0, y0;
+    tie(x0, y0) = position;
+    
     float x1 = x0;
     float y1 = y0;
 
@@ -83,14 +85,12 @@ void LSystem::draw(){
                 y0 = y1;
                 break;
             case '[':
-                currentTurtle.setX(x1);
-                currentTurtle.setY(y1);
+                currentTurtle.setPosition(x1, y1);
                 currentTurtle.setAngle(angleRot);
                 savedStates.push(currentTurtle);
                 break;
             case ']':
-                x0 = savedStates.top().getX();
-                y0 = savedStates.top().getY();
+                tie(x0, y0) = savedStates.top().getPosition();
                 x1 = x0;
                 y1 = y0;
                 angleRot = savedStates.top().getAngle();
@@ -168,6 +168,4 @@ string LSystem::toString(){
 
     return tostring;
 }
-LSystem::~LSystem() {
-	// TODO Auto-generated destructor stub
-}
+LSystem::~LSystem() {}
