@@ -18,6 +18,7 @@
 #include "LSystems/LSystem.h"
 #include "Flocking/Boid.h"
 #include "PredatorPrey/PredatorPrey.h"
+#include "PredatorPrey/Predator.h"
 
 
 #define WINDOW_TITLE_PREFIX "Alife"
@@ -26,6 +27,8 @@ using namespace std;
 
 const float VIEW_WIDTH = 1200;
 const float VIEW_HEIGHT = 700;
+
+float velocityFactor = 1.5;
 
 unsigned FrameCount = 0;
 
@@ -36,7 +39,7 @@ int cameraY = 0;
 int cameraZ = 0;
 
 vector<LSystem> lsystems;
-PredatorPrey<Boid> flock;
+PredatorPrey<Boid, Predator> predatorPrey;
 
 
 void drawWalls(bool);
@@ -63,12 +66,15 @@ int main(int argc, char *argv[]){
 
     createTrees(4);
 
-    flock = PredatorPrey<Boid>();
+    predatorPrey = PredatorPrey<Boid, Predator>();
     // Add an initial set of boids into the system
-    for (int i = 0; i < 50; i++) {
-        flock.addBoid( Boid(VIEW_WIDTH/2, VIEW_WIDTH/2) );
+    for (int i = 0; i < 5; i++) {
+        predatorPrey.addPrey( Boid(VIEW_WIDTH/2, VIEW_WIDTH/2) );
     }
 
+    for (int i = 0; i < 3; i++) {
+        predatorPrey.addPredator( Predator(0, 0) );
+    }
     glutMainLoop();
 
     return EXIT_SUCCESS;
@@ -97,6 +103,7 @@ static void display(void){
     glTranslatef(cameraX, 0, 0);
     glTranslatef(0, cameraY, 0);
 
+    glColor3f(1, 1, 1);
     glRasterPos2f(20, VIEW_HEIGHT - 55);
     drawString("Crecer arbol: Key +");
     glRasterPos2f(VIEW_WIDTH/2 - 50, VIEW_HEIGHT - 40);
@@ -108,7 +115,7 @@ static void display(void){
         lsystems[i].draw();
     }    
 
-    flock.run(VIEW_WIDTH, VIEW_HEIGHT);
+    predatorPrey.run(velocityFactor, VIEW_WIDTH, VIEW_HEIGHT);
 
     ++FrameCount;
 

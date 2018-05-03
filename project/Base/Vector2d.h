@@ -34,6 +34,7 @@ class Vector2d {
         Vector2d& setMagnitude(float);
         Vector2d& limit(float);
         float heading();
+        string toString();
 };
 
 #endif /* VECTOR2D_H_ */

@@ -3,9 +3,10 @@ main:
 		./project/Base/Vector2d.cpp \
 		./project/Base/Figure.cpp \
 		./project/Base/Turtle.cpp \
+		./project/LSystems/LSystem.cpp \
 		./project/Flocking/Boid.cpp \
 		./project/PredatorPrey/PredatorPrey.cpp \
-		./project/LSystems/LSystem.cpp \
+		./project/PredatorPrey/Predator.cpp \
 		./project/main.cpp -std=c++11 -o \
 	./project/main -lglut -lGL -lGLEW -lGLU -Wfatal-errors\
 	 && ./project/main

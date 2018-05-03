@@ -11,7 +11,6 @@ using namespace std;
 class Boid: public Turtle {
     using Turtle::Turtle;
 	protected:
-        vector<Turtle> boids;
         float neighborDist = 50;
 
     public:
@@ -22,7 +21,7 @@ class Boid: public Turtle {
         Vector2d seek(Vector2d);
         Vector2d cohere(vector<Boid>);
         void flock(vector<Boid>);
-        void run(vector<Boid>, float, float);
+        void run(vector<Boid>, float, float, float);
 };
 #endif /* BOID_H_ */
 

@@ -54,6 +54,7 @@ void LSystem::generateWord(){
     }
 };
 void LSystem::draw(){
+    glColor3f(0, 1, 0);
     float x0, y0;
     tie(x0, y0) = position.getTuple();
     

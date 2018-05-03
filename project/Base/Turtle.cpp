@@ -24,6 +24,7 @@ Turtle::Turtle(float x, float y) {
 	maxSpeed = 2;
 	maxForce = 0.3;
 	sideLength = 4;
+	life = 1;
 }
 Vector2d Turtle::getVelocity(){
 	return velocity;
@@ -34,10 +35,10 @@ Vector2d Turtle::getAcceleration(){
 void Turtle::applyForce(Vector2d force){
 	acceleration.add(force);
 };
-void Turtle::update() {
+void Turtle::update(float velocityFactor) {
 	velocity.add(acceleration);
 	velocity.limit(maxSpeed);
-	velocity.mult(2);
+	velocity.mult(velocityFactor);
 	position.add(velocity);
 	acceleration.mult(0);
 }
@@ -51,16 +52,21 @@ void Turtle::borders(float width, float height) {
     if (y > height + sideLength) position.setY(-sideLength);
 }
 
-void Turtle::render() {
+void Turtle::render(float r, float g, float b) {
 	// Draw a triangle rotated in the direction of velocity
 	float theta = velocity.heading() * RADTODEG + 90;
-
+	glColor3f(r, g, b);
 	drawTriangle(position.getX(), position.getY(), theta, sideLength);
 }
 
-void Turtle::run(float maxWidth, float maxHeight) {
-	update();
-	borders(maxWidth, maxHeight);
-	render();
+void Turtle::run(float velocityFactor, float maxWidth, float maxHeight) {
+	if( life > 0 ){
+		update(velocityFactor);
+		borders(maxWidth, maxHeight);
+		render(1, 1, 1);
+	}
+}
+void Turtle::die(){
+	life = 0;
 }
 Turtle::~Turtle() {}

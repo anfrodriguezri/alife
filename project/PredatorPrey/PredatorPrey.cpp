@@ -1,21 +1,29 @@
 #include "PredatorPrey.h"
 
-template <class T>
-PredatorPrey<T>::PredatorPrey() {}
+template <class T, class U>
+PredatorPrey<T, U>::PredatorPrey() {}
 
-template <class T>
-void PredatorPrey<T>::run(float maxWidth, float maxHeight){
-	for( int i = 0; i < turtles.size(); i++){
-		turtles[i].run(turtles, maxWidth, maxHeight);
+template <class T, class U>
+void PredatorPrey<T, U>::run(float velocityFactor, float maxWidth, float maxHeight){
+	for( int i = 0; i < preys.size(); i++){
+		preys[i].run(preys, velocityFactor, maxWidth, maxHeight);
+	}
+	for( int i = 0; i < predators.size(); i++){
+		predators[i].run(predators, preys, velocityFactor, maxWidth, maxHeight);
 	}
 }
 
-template <class T>
-void PredatorPrey<T>::addBoid(T turtle){
-	turtles.push_back(turtle);
+template <class T, class U>
+void PredatorPrey<T, U>::addPrey(T prey){
+	preys.push_back(prey);
 };
 
-template <class T>
-PredatorPrey<T>::~PredatorPrey() {}
+template <class T, class U>
+void PredatorPrey<T, U>::addPredator(U predator){
+	predators.push_back(predator);
+};
 
-template class PredatorPrey<Boid>;
+template <class T, class U>
+PredatorPrey<T, U>::~PredatorPrey() {}
+
+template class PredatorPrey<Boid, Predator>;

@@ -86,18 +86,17 @@ Vector2d Boid::cohere(vector<Boid> boids){
 
     for(int i = 0; i < boids.size(); i++) {
     	Vector2d otherPosition = boids[i].getPosition();
-		float distance = Vector2d::dist(position, otherPosition);
+  		float distance = Vector2d::dist(position, otherPosition);
 
-		if ((distance > 0) && (distance < neighborDist)) {
-			sum.add(otherPosition); // Add position
-			count++;
-		}
+  		if ((distance > 0) && (distance < neighborDist)) {
+  			sum.add(otherPosition); // Add position
+  			count++;
+  		}
     }
     if (count > 0) {
-		sum.div(count);
-		return seek(sum);  // Steer towards the position
-    } 
-    else {
+  		sum.div(count);
+  		return seek(sum);  // Steer towards the position
+    }else {
     	return Vector2d();
     }
 };
@@ -114,11 +113,11 @@ void Boid::flock(vector<Boid> boids){
   applyForce(ali);
   applyForce(coh);
 };
-void Boid::run(vector<Boid> boids, float maxWidth, float maxHeight) {
+void Boid::run(vector<Boid> boids, float velocityFactor, float maxWidth, float maxHeight) {
   flock(boids);
-  update();
+  update(velocityFactor);
   borders(maxWidth, maxHeight);
-  render();
+  render(1, 1, 1);
 }
 
 Boid::~Boid() {}

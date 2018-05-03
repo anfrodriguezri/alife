@@ -74,4 +74,7 @@ float Vector2d::heading(){
 	float angle = (float) atan2(y, x);
     return angle;
 }
+string Vector2d::toString(){
+	return "(" + to_string(x) + ", " + to_string(y) + ")";
+}
 Vector2d::~Vector2d(){}
