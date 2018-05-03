@@ -1,10 +1,11 @@
 main:
-	g++ ./project/oglhelpers.cpp \
-		./project/Vector2d.cpp \
-		./project/Figure.cpp \
-		./project/Turtle.cpp \
-		./project/Flock.cpp \
-		./project/LSystem.cpp \
+	g++ ./project/helpers/oglhelpers.cpp \
+		./project/Base/Vector2d.cpp \
+		./project/Base/Figure.cpp \
+		./project/Base/Turtle.cpp \
+		./project/Flocking/Boid.cpp \
+		./project/PredatorPrey/PredatorPrey.cpp \
+		./project/LSystems/LSystem.cpp \
 		./project/main.cpp -std=c++11 -o \
 	./project/main -lglut -lGL -lGLEW -lGLU -Wfatal-errors\
 	 && ./project/main

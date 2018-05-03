@@ -14,9 +14,10 @@
 #include <iterator>
 #include <tuple>
 
-#include "oglhelpers.h"
-#include "LSystem.h"
-#include "Flock.h"
+#include "helpers/oglhelpers.h"
+#include "LSystems/LSystem.h"
+#include "Flocking/Boid.h"
+#include "PredatorPrey/PredatorPrey.h"
 
 
 #define WINDOW_TITLE_PREFIX "Alife"
@@ -35,7 +36,8 @@ int cameraY = 0;
 int cameraZ = 0;
 
 vector<LSystem> lsystems;
-Flock flock;
+PredatorPrey<Boid> flock;
+
 
 void drawWalls(bool);
 void createTrees(int);
@@ -61,10 +63,10 @@ int main(int argc, char *argv[]){
 
     createTrees(4);
 
-    flock = Flock();
+    flock = PredatorPrey<Boid>();
     // Add an initial set of boids into the system
-    for (int i = 0; i < 150; i++) {
-        flock.addBoid( Turtle(VIEW_WIDTH/2, VIEW_WIDTH/2) );
+    for (int i = 0; i < 50; i++) {
+        flock.addBoid( Boid(VIEW_WIDTH/2, VIEW_WIDTH/2) );
     }
 
     glutMainLoop();
