@@ -1,5 +1,5 @@
-#ifndef PREDATORPREY_H_
-#define PREDATORPREY_H_
+#ifndef PREDATOR_PREY_H_
+#define PREDATOR_PREY_H_
 
 #include <vector>
 #include "../Flocking/Boid.h"
@@ -12,13 +12,21 @@ class PredatorPrey {
 	protected:
         vector<T> preys;
         vector<U> predators;
-
+        bool preysPresent;
+        bool predatorsPresent;
     public:
         PredatorPrey();
         virtual ~PredatorPrey();
-        void run(float, float, float);
+        void togglePreys();
+        void togglePredators();
+        void runPreys(float velocityFactor, float maxWidth, float maxHeight);
+        void runPredators(float velocityFactor, float maxWidth, float maxHeight);
+        void run(float velocityFactor, float maxWidth, float maxHeight);
         void addPrey(T);
         void addPredator(U);
+        void renderPreys();
+        void renderPredators();
+        void render();
 };
-#endif /* PREDATORPREY_H_ */
+#endif /* PREDATOR_PREY_H_ */
 

@@ -1,12 +1,5 @@
-/*
- * oglhelpers.h
- *
- *  Created on: Apr 30, 2018
- *      Author: anfrodriguezri
- */
-
-#ifndef OGLHELPERS_H_
-#define OGLHELPERS_H_
+#ifndef OGL_HELPERS_H_
+#define OGL_HELPERS_H_
 
 #include <GL/freeglut.h>
 #include <string>
@@ -14,6 +7,7 @@
 
 void drawString(std::string);
 void drawLine(GLfloat, GLfloat, GLfloat, GLfloat);
-void drawTriangle(float x, float y, float theta, float sideLength);
+void drawTriangle(GLfloat, GLfloat, GLfloat, GLfloat);
+void drawCircle(GLfloat x, GLfloat y, GLfloat radius);
 
-#endif /* OGLHELPERS_H_ */
+#endif /* OGL_HELPERS_H_ */

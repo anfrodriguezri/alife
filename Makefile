@@ -7,6 +7,8 @@ main:
 		./project/Flocking/Boid.cpp \
 		./project/PredatorPrey/PredatorPrey.cpp \
 		./project/PredatorPrey/Predator.cpp \
+		./project/Sugarscape/Sandpile.cpp \
+		./project/Sugarscape/Sugarscape.cpp \
 		./project/main.cpp -std=c++11 -o \
 	./project/main -lglut -lGL -lGLEW -lGLU -Wfatal-errors\
 	 && ./project/main

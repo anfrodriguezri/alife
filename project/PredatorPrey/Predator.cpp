@@ -2,9 +2,12 @@
 
 #include "Predator.h"
 
-Predator::Predator() {}
+Predator::Predator(){}
+Predator::Predator(float x, float y) : Turtle(x, y) {
+  vision = 100;
+};
+
 Vector2d Predator::separate(vector<Predator> predators){
-	float desiredSeparation = 25;
 	Vector2d steer;
 
 	int count = 0; 
@@ -14,7 +17,7 @@ Vector2d Predator::separate(vector<Predator> predators){
 
 		float distance = Vector2d::dist(position, otherPosition);
 		
-		if ((distance > 0) && (distance < desiredSeparation)) {
+		if ( distance > 0 && distance < Predator::desiredSeparation ) {
 			// Calculate vector pointing away from neighbor
 			Vector2d diff = Vector2d::sub(position, otherPosition);
 			diff.normalize();
@@ -25,21 +28,21 @@ Vector2d Predator::separate(vector<Predator> predators){
 	}
 
 	if (count > 0) {
-      steer.div((float)count);
-    }
+    steer.div((float)count);
+  }
 
-    // As long as the vector is greater than 0
-    if (steer.magnitude() > 0) {
-      // First two lines of code below could be condensed with new PVector setMag() method
-      // Not using this method until Processing.js catches up
-      // steer.setMag(maxspeed);
+  // As long as the vector is greater than 0
+  if (steer.magnitude() > 0) {
+    // First two lines of code below could be condensed with new PVector setMag() method
+    // Not using this method until Processing.js catches up
+    // steer.setMag(maxspeed);
 
-      // Implement Reynolds: Steering = Desired - Velocity
-      steer.setMagnitude(maxSpeed);
-      steer.sub(velocity);
-      steer.limit(maxForce);
-    }
-    return steer;
+    // Implement Reynolds: Steering = Desired - Velocity
+    steer.setMagnitude(maxSpeed);
+    steer.sub(velocity);
+    steer.limit(maxForce);
+  }
+  return steer;
 };
 Vector2d Predator::seek(Vector2d target){
 	Vector2d desired = Vector2d::sub(target, position);  // A vector pointing from the position to the target
@@ -51,19 +54,22 @@ Vector2d Predator::seek(Vector2d target){
   steer.limit(maxForce);  // Limit to maximum steering force
   return steer;
 };
+void Predator::eat(vector<Boid>& preys, int hunted){
+  preys.erase(preys.begin()+hunted);
+}
 Vector2d Predator::hunt(vector<Boid>& preys){
   Vector2d closest;   // Start with empty vector to accumulate all positions
-  float minDistance = 200;
   bool anyClose = false;
+  
   for(int i = 0; i < preys.size(); i++) {
     Vector2d otherPosition = preys[i].getPosition();
     float distance = Vector2d::dist(position, otherPosition);
 
     if( distance < 2 * sideLength ){
-      preys.erase(preys.begin()+i);
+      eat(preys, i);
     }
 
-    if( distance < minDistance) {
+    if( distance > 0 && distance < vision) {
       anyClose = true;
       closest = otherPosition;
     }
@@ -78,7 +84,7 @@ void Predator::move(vector<Predator>& predators, vector<Boid>& preys){
   Vector2d hun = hunt(preys);
 	// Arbitrarily weight these forces
 	sep.mult(1);
-  hun.mult(1);
+  hun.mult(2);
   	// Add the force vectors to acceleration
  	applyForce(sep);
   applyForce(hun);

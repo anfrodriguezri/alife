@@ -7,17 +7,20 @@
 
 using namespace std;
 
+class Boid;
+
 class Predator: public Turtle {
 	using Turtle::Turtle;
 	protected:
-        float neighborDist = 50;
 
     public:
         Predator();
+        Predator(float, float);
         virtual ~Predator();
         Vector2d separate(vector<Predator>);
         Vector2d seek(Vector2d);
         Vector2d hunt(vector<Boid>&);
+        void eat(vector<Boid>&, int);
         void move(vector<Predator>&, vector<Boid>&);
         void run(vector<Predator>&, vector<Boid>&, float, float, float);
 };

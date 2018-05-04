@@ -9,13 +9,18 @@ using namespace std;
 
 class Turtle : public Figure {
 	protected:
+		
 		Vector2d velocity;
 		Vector2d acceleration;
 		float maxForce; // max steering force to change velocity direction
 		float maxSpeed;
 		float sideLength;
 		float life;
+		float vision;
+
 	public:
+		static float desiredSeparation;
+		
 		Turtle();
 		Turtle(float, float);
 		Vector2d getVelocity();

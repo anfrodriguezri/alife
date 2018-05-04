@@ -11,6 +11,8 @@ using namespace std;
 
 Turtle::Turtle() {}
 
+float Turtle::desiredSeparation = 25;
+
 Turtle::Turtle(float x, float y) {
 	acceleration.setXY( 0, 0 );
 	
@@ -25,6 +27,7 @@ Turtle::Turtle(float x, float y) {
 	maxForce = 0.3;
 	sideLength = 4;
 	life = 1;
+	vision = 50;
 }
 Vector2d Turtle::getVelocity(){
 	return velocity;
