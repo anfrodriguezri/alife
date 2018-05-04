@@ -6,6 +6,7 @@ Boid::Boid() {}
 
 Boid::Boid(float x, float y) : Turtle(x, y) {
   maxForce = 0.28;
+  life = 400;
 }
 Vector2d Boid::separate(vector<Boid> boids){
 	Vector2d steer;
@@ -139,27 +140,68 @@ Vector2d Boid::escape(vector<Predator> predators){
   }
   return steer;
 }
-void Boid::flock(vector<Boid>& boids, vector<Predator>& predators){
+void Boid::eat(Vector2d foodPosition, Sandpile sandpile){
+  life += sandpile.getResource(foodPosition);;
+}
+Vector2d Boid::searchFood(Sugarscape sugarscape){
+  Vector2d closest;   // Start with empty vector to accumulate all positions
+  bool anyClose = false;
+  vector<Sandpile> sandpiles = sugarscape.getSandpiles();
+
+  for( Sandpile sandpile : sandpiles ){
+    Vector2d sandpilePosition = sandpile.getPosition();
+
+    float distance = Vector2d::dist(position, sandpilePosition);
+    distance -= sandpile.getRadious();
+    //cout << sandpile.getRadious() << endl;
+    if( distance > 0 && distance < vision) {
+      anyClose = true;
+      
+      closest = sandpile.getBestGrainLocation(position);
+
+      float distanceToClosest = Vector2d::dist(position, closest);
+      // cout << distance << endl;
+      // cout << sandpile.getCapacity() / 10 << endl;
+      if( distance < sandpile.getCapacity() / 10 ){
+        eat(closest, sandpile);
+      }
+    }
+  }
+  
+  if( anyClose )
+    return seek(closest);
+  else
+    return Vector2d();
+}
+void Boid::flock(vector<Boid>& boids, vector<Predator>& predators, Sugarscape sugarscape){
 	Vector2d sep = separate(boids);   // Separation
   Vector2d ali = align(boids);      // Alignment
   Vector2d coh = cohere(boids);   // Cohesion
   Vector2d esc = escape(predators);   // Cohesion
+  Vector2d food = searchFood(sugarscape);
   // Arbitrarily weight these forces
   sep.mult(1.5);
   ali.mult(1);
   coh.mult(1);
-  esc.mult(2);
+  esc.mult(3);
+  food.mult(1.5);
   // Add the force vectors to acceleration
   applyForce(sep);
   applyForce(ali);
   applyForce(coh);
   applyForce(esc);
+  applyForce(food);
 };
-void Boid::run(vector<Boid>& boids, vector<Predator>& predators, float velocityFactor, float maxWidth, float maxHeight) {
-  flock(boids, predators);
-  update(velocityFactor);
+bool Boid::run(vector<Boid>& boids, vector<Predator>& predators, Sugarscape sugarscape,
+                      float velocityFactor, float maxWidth, float maxHeight, bool starvationDeath) {
+  if( !isAlive(starvationDeath) ) return false;
+
+  flock(boids, predators, sugarscape);
+  update(velocityFactor, starvationDeath);
   borders(maxWidth, maxHeight);
-  render(1, 1, 1);
+  render(1, 1, 1, starvationDeath);
+
+  return true;
 }
 
 Boid::~Boid() {}

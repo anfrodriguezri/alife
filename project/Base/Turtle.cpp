@@ -35,15 +35,21 @@ Vector2d Turtle::getVelocity(){
 Vector2d Turtle::getAcceleration(){
 	return acceleration;
 }
+int Turtle::getLife(){
+	return life;
+}
 void Turtle::applyForce(Vector2d force){
 	acceleration.add(force);
 };
-void Turtle::update(float velocityFactor) {
+void Turtle::update(float velocityFactor, bool starvationDeath) {
 	velocity.add(acceleration);
 	velocity.limit(maxSpeed);
 	velocity.mult(velocityFactor);
 	position.add(velocity);
 	acceleration.mult(0);
+
+	if( starvationDeath )
+		life -= 1;
 }
 void Turtle::borders(float width, float height) {
 	float x = position.getX();
@@ -55,21 +61,26 @@ void Turtle::borders(float width, float height) {
     if (y > height + sideLength) position.setY(-sideLength);
 }
 
-void Turtle::render(float r, float g, float b) {
+void Turtle::render(float r, float g, float b, bool starvationDeath){
 	// Draw a triangle rotated in the direction of velocity
 	float theta = velocity.heading() * RADTODEG + 90;
 	glColor3f(r, g, b);
 	drawTriangle(position.getX(), position.getY(), theta, sideLength);
-}
-
-void Turtle::run(float velocityFactor, float maxWidth, float maxHeight) {
-	if( life > 0 ){
-		update(velocityFactor);
-		borders(maxWidth, maxHeight);
-		render(1, 1, 1);
+	if( starvationDeath ){
+		glRasterPos2f(position.getX() - 20, position.getY() - 20);
+		drawString(to_string(life));
 	}
 }
-void Turtle::die(){
-	life = 0;
+bool Turtle::isAlive(bool starvationDeath){
+	return !(life == 0 && starvationDeath);
+}
+bool Turtle::run(float velocityFactor, float maxWidth, float maxHeight, bool starvationDeath){
+	if( !isAlive(starvationDeath) ) return false;
+
+	update(velocityFactor, starvationDeath);
+	borders(maxWidth, maxHeight);
+	render(1, 1, 1, starvationDeath);
+	
+	return true;
 }
 Turtle::~Turtle() {}

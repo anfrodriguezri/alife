@@ -32,34 +32,36 @@ using namespace std;
 const float VIEW_WIDTH = 1200;
 const float VIEW_HEIGHT = 700;
 
-float velocityFactor = 1.5;
+float velocityFactor;
 
-unsigned FrameCount = 0;
+unsigned FrameCount;
 
-int step = 20;
+int step;
 
-int cameraX = 40;
-int cameraY = 0;
-int cameraZ = 0;
+int cameraX;
+int cameraY;
+int cameraZ;
 
 vector<LSystem> lsystems;
 PredatorPrey<Boid, Predator> predatorPrey;
 Sugarscape sugarscape;
 
-bool showMenu = true;
-bool showTrees = false;
+bool showMenu;
+bool showTrees;
 
-bool debugMode = false;
-bool spaceBarPressed = false;
+bool debugMode;
+bool spaceBarPressed;
 
-string lastKeyCombination = "";
+string lastKeyCombination;
 
 vector<string> commands {
     "Toggle Menu: 'm'",
     "Toggle Trees: 't'",
     "Toggle Preys: 'p'",
-    "Toggle Predators: 'alt + p'",
-    "Toggle Sugarscape: 'alt + s'",
+    "Toggle Predators: 'ALT + p'",
+    "Toggle Sugarscape: 'ALT + s'",
+    "Toggle Death From Starvation: 'ALT + d'",
+    "Reset: 'r'",
     "Debug Mode: '0'",
     "Play/Pause: 'SPACEBAR'",
     "Exit: 'q or ESC'",
@@ -108,27 +110,47 @@ void createTrees(int numTrees){
         LSystem ls = LSystem(VIEW_WIDTH, VIEW_HEIGHT, true);
         ls.setRandom();
         lsystems.push_back(ls);
+
+        Vector2d treePosition = ls.getPosition();
+
+        sugarscape.addSandpile( Sandpile(treePosition, 7, sugarscape.getCapacity() ) );
     }
 }
 void setup(){
-    createTrees(4);
+    velocityFactor = 1;
+    FrameCount = 0;
+
+    step = 20;
+
+    cameraX = 40;
+    cameraY = 0;
+    cameraZ = 0;
+
+    lsystems = vector<LSystem>();
+
+    showMenu = true;
+    showTrees = false;
+
+    debugMode = false;
+    spaceBarPressed = false;
+
+    lastKeyCombination = "";
 
     predatorPrey = PredatorPrey<Boid, Predator>();
     // Add an initial set of boids into the system
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 20; i++) {
         predatorPrey.addPrey( Boid(VIEW_WIDTH/2, VIEW_WIDTH/2) );
     }
 
-    for (int i = 0; i < 3; i++) {
-        predatorPrey.addPredator( Predator(0, 0) );
+    for (int i = 0; i < 5; i++) {
+        predatorPrey.addPredator( Predator(0.1*VIEW_WIDTH, 0.1*VIEW_HEIGHT) );
     }
 
-    sugarscape = Sugarscape(20);
-
-    sugarscape.addSandpile( Sandpile(400, 400, 3, sugarscape.getCapacity()) );
+    sugarscape = Sugarscape(100);
+    createTrees(2);
+    
 }
 static void display(void){
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
@@ -150,7 +172,13 @@ static void display(void){
 
         vector<pair<string, string>> dynamicCommands;
 
+        int preysNum = predatorPrey.getPreysPresent() ? predatorPrey.getPreys().size() : 0;
+        int predatorNum = predatorPrey.getPredatorsPresent() ? predatorPrey.getPredators().size() : 0;
+
         dynamicCommands.push_back( make_pair("Last Key Combination: ", lastKeyCombination) );
+        dynamicCommands.push_back( make_pair("Preys: ", to_string(preysNum)) );
+        dynamicCommands.push_back( make_pair("Predators: ", to_string(predatorNum)) );
+        dynamicCommands.push_back( make_pair("Velocity Factor: ", to_string(velocityFactor)) );
 
         for( int i = 0, h = 50; i < dynamicCommands.size(); i++, h+=20){
             glRasterPos2f(0.75 * VIEW_WIDTH, VIEW_HEIGHT - h);    
@@ -168,7 +196,7 @@ static void display(void){
         if( debugMode)
             spaceBarPressed = false;
 
-        predatorPrey.run(velocityFactor, VIEW_WIDTH, VIEW_HEIGHT);
+        predatorPrey.run(sugarscape, velocityFactor, VIEW_WIDTH, VIEW_HEIGHT);
 
         sugarscape.run();
     }else{
@@ -209,6 +237,11 @@ static void key(unsigned char key, int x, int y){
             break;
         case 'D':
         case 'd':
+            if( glutGetModifiers() & GLUT_ACTIVE_ALT ){
+                lastKeyCombination += " + ALT";
+                predatorPrey.toggleDeathFromStarvation();
+                break;
+            }
             cameraX -= step;
             break;
         case 'M':
@@ -227,6 +260,16 @@ static void key(unsigned char key, int x, int y){
                 break;
             }
             predatorPrey.togglePreys();
+            break;
+        case 'R':
+        case 'r':
+            setup();
+            break;
+        case '+':
+            velocityFactor += 0.1;
+            break;
+        case '-':
+            velocityFactor -= 0.1;
             break;
         case '0':
             debugMode = !debugMode;

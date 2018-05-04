@@ -4,7 +4,8 @@
 
 Predator::Predator(){}
 Predator::Predator(float x, float y) : Turtle(x, y) {
-  vision = 100;
+  vision = 200;
+  life = 600;
 };
 
 Vector2d Predator::separate(vector<Predator> predators){
@@ -56,6 +57,7 @@ Vector2d Predator::seek(Vector2d target){
 };
 void Predator::eat(vector<Boid>& preys, int hunted){
   preys.erase(preys.begin()+hunted);
+  life += 500;
 }
 Vector2d Predator::hunt(vector<Boid>& preys){
   Vector2d closest;   // Start with empty vector to accumulate all positions
@@ -89,11 +91,16 @@ void Predator::move(vector<Predator>& predators, vector<Boid>& preys){
  	applyForce(sep);
   applyForce(hun);
 };
-void Predator::run(vector<Predator>& predators, vector<Boid>& preys, float velocityFactor, float maxWidth, float maxHeight){
+bool Predator::run(vector<Predator>& predators, vector<Boid>& preys, 
+                                    float velocityFactor, float maxWidth, float maxHeight, bool starvationDeath){
+  if( !isAlive(starvationDeath) ) return false;
+  
   move(predators, preys);
-  update(velocityFactor);
+  update(velocityFactor, starvationDeath);
   borders(maxWidth, maxHeight);
-  render(1, 0, 0);
+  render(1, 0, 0, starvationDeath);
+
+  return true;
 }
 
 Predator::~Predator() {}

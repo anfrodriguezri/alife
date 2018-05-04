@@ -22,7 +22,7 @@ class Predator: public Turtle {
         Vector2d hunt(vector<Boid>&);
         void eat(vector<Boid>&, int);
         void move(vector<Predator>&, vector<Boid>&);
-        void run(vector<Predator>&, vector<Boid>&, float, float, float);
+        bool run(vector<Predator>& predators, vector<Boid>& preys, float velocityFactor, float maxWidth, float maxHeight, bool death);
 };
 #endif /* PREDATORPREY_H_ */
 

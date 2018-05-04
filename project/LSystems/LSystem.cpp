@@ -23,8 +23,8 @@ LSystem::LSystem(float x, float y, bool maximumVals){
     if( maximumVals ){
         float randx = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
         float randy = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-        x = (randx * x + 0);
-        y = (randy * y + 0);
+        x = randx * (0.8 * x ) + (0.1 * x);
+        y = randy * (0.8 * y ) + (0.1 * y);
     }
     setPosition(x, y);
 }

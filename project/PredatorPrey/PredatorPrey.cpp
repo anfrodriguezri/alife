@@ -4,21 +4,40 @@ template <class T, class U>
 PredatorPrey<T, U>::PredatorPrey() {
 	preysPresent = false;
 	predatorsPresent = false;
-}
 
+	starvationDeath = false;
+}
+template <class T, class U>
+vector<T> PredatorPrey<T, U>::getPreys(){
+	return preys;
+}
+template <class T, class U>
+vector<U> PredatorPrey<T, U>::getPredators(){
+	return predators;
+}
+template <class T, class U>
+bool PredatorPrey<T, U>::getPreysPresent(){
+	return preysPresent;
+}
+template <class T, class U>
+bool PredatorPrey<T, U>::getPredatorsPresent(){
+	return predatorsPresent;
+}
 template <class T, class U>
 void PredatorPrey<T, U>::togglePreys(){
 
 	preysPresent = !preysPresent;
 };
-
 template <class T, class U>
 void PredatorPrey<T, U>::togglePredators(){
 	predatorsPresent = !predatorsPresent;
 };
-
 template <class T, class U>
-void PredatorPrey<T, U>::runPreys(float velocityFactor, float maxWidth, float maxHeight){
+void PredatorPrey<T, U>::toggleDeathFromStarvation(){
+	starvationDeath = !starvationDeath;
+};
+template <class T, class U>
+void PredatorPrey<T, U>::runPreys(Sugarscape sugarscape, float velocityFactor, float maxWidth, float maxHeight){
 	if( !preysPresent ) return;
 
 	vector<Predator> empty;
@@ -28,7 +47,11 @@ void PredatorPrey<T, U>::runPreys(float velocityFactor, float maxWidth, float ma
 		withPredators = &predators;
 
 	for( int i = 0; i < preys.size(); i++){
-		preys[i].run(preys, *withPredators, velocityFactor, maxWidth, maxHeight);
+		bool isAlive = preys[i].run(preys, *withPredators, sugarscape, velocityFactor, maxWidth, maxHeight, starvationDeath);
+
+		if(!isAlive){
+			preys.erase(preys.begin()+i);
+		}
 	}
 }
 template <class T, class U>
@@ -42,13 +65,17 @@ void PredatorPrey<T, U>::runPredators(float velocityFactor, float maxWidth, floa
 		withPreys = &preys;
 
 	for( int i = 0; i < predators.size(); i++){
-		predators[i].run(predators, *withPreys, velocityFactor, maxWidth, maxHeight);
+		bool isAlive = predators[i].run(predators, *withPreys, velocityFactor, maxWidth, maxHeight, starvationDeath);
+
+		if(!isAlive){
+			predators.erase(predators.begin()+i);
+		}
 	}
 }
 
 template <class T, class U>
-void PredatorPrey<T, U>::run(float velocityFactor, float maxWidth, float maxHeight){
-	runPreys(velocityFactor, maxWidth, maxHeight);
+void PredatorPrey<T, U>::run(Sugarscape sugarscape, float velocityFactor, float maxWidth, float maxHeight){
+	runPreys(sugarscape, velocityFactor, maxWidth, maxHeight);
 	runPredators(velocityFactor, maxWidth, maxHeight);
 }
 template <class T, class U>
@@ -64,7 +91,7 @@ void PredatorPrey<T, U>::renderPreys(){
 	if( !preysPresent ) return;
 
 	for( int i = 0; i < preys.size(); i++){
-		preys[i].render(1, 1, 1);
+		preys[i].render(1, 1, 1, starvationDeath);
 	}
 }
 template <class T, class U>
@@ -72,7 +99,7 @@ void PredatorPrey<T, U>::renderPredators(){
 	if( !predatorsPresent ) return;
 
 	for( int i = 0; i < predators.size(); i++){
-		predators[i].render(1, 0, 0);
+		predators[i].render(1, 0, 0, starvationDeath);
 	}
 }
 template <class T, class U>

@@ -14,9 +14,10 @@ class Sugarscape {
 
 	public:
 		Sugarscape();
-		Sugarscape(float);
+		Sugarscape(float capacity);
 		void togglePresence();
 		float getCapacity();
+		vector<Sandpile> getSandpiles();
 		void addSandpile(Sandpile);
 		void run();
 		void render();

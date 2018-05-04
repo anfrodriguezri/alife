@@ -6,6 +6,8 @@
 #include "../Base/Vector2d.h"
 #include "../Base/Turtle.h"
 #include "../PredatorPrey/Predator.h"
+#include "../Sugarscape/Sugarscape.h"
+#include "../Sugarscape/Sandpile.h"
 
 using namespace std;
 
@@ -24,8 +26,11 @@ class Boid: public Turtle {
         Vector2d seek(Vector2d);
         Vector2d cohere(vector<Boid>);
         Vector2d escape(vector<Predator>);
-        void flock(vector<Boid>&, vector<Predator>&);
-        void run(vector<Boid>&, vector<Predator>&, float, float, float);
+        void eat(Vector2d foodPosition, Sandpile sandpile);
+        Vector2d searchFood(Sugarscape);
+        void flock(vector<Boid>& boids, vector<Predator>& predators, Sugarscape sugarscape);
+        bool run(vector<Boid>& boids, vector<Predator>& predators, Sugarscape sugarscape,
+                                float velocityFactor, float maxWidth, float maxHeight, bool death);
 };
 #endif /* BOID_H_ */
 
