@@ -25,7 +25,7 @@ Turtle::Turtle(float x, float y) {
 
 	maxSpeed = 2;
 	maxForce = 0.3;
-	sideLength = 4;
+	sideLength = 8;
 	life = 1;
 	vision = 50;
 }
@@ -63,12 +63,13 @@ void Turtle::borders(float width, float height) {
 
 void Turtle::render(float r, float g, float b, bool starvationDeath){
 	// Draw a triangle rotated in the direction of velocity
+	GLuint loadBMP_custom(const char * imagepath);
+	GLuint image = loadBMP_custom("./texture.bmp");
 	float theta = velocity.heading() * RADTODEG + 90;
 	glColor3f(r, g, b);
 	drawTriangle(position.getX(), position.getY(), theta, sideLength);
 	if( starvationDeath ){
-		glRasterPos2f(position.getX() - 20, position.getY() - 20);
-		drawString(to_string(life));
+		drawString(to_string(life), position.getX() - 20, position.getY() - 30);
 	}
 }
 bool Turtle::isAlive(bool starvationDeath){

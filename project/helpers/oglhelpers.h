@@ -5,7 +5,7 @@
 #include <string>
 #include <math.h>
 
-void drawString(std::string);
+void drawString(std::string message, GLfloat x, GLfloat y);
 void drawLine(GLfloat, GLfloat, GLfloat, GLfloat);
 void drawTriangle(GLfloat, GLfloat, GLfloat, GLfloat);
 void drawCircle(GLfloat x, GLfloat y, GLfloat radius);

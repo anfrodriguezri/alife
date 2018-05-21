@@ -55,16 +55,17 @@ bool spaceBarPressed;
 string lastKeyCombination;
 
 vector<string> commands {
-    "Toggle Menu: 'm'",
-    "Toggle Trees: 't'",
-    "Toggle Preys: 'p'",
-    "Toggle Predators: 'ALT + p'",
-    "Toggle Sugarscape: 'ALT + s'",
-    "Toggle Death From Starvation: 'ALT + d'",
-    "Reset: 'r'",
-    "Debug Mode: '0'",
-    "Play/Pause: 'SPACEBAR'",
-    "Exit: 'q or ESC'",
+    "Toggle Menu: m",
+    "Toggle Trees: t",
+    "Toggle Preys: p",
+    "Toggle Predators: ALT + p",
+    "Toggle Sugarscape: ALT + s",
+    "Toggle Death From Starvation: ALT + d",
+    "Toggle Alls: ALT + a",
+    "Reset: r",
+    "Debug Mode: 0",
+    "Play/Pause: SPACEBAR",
+    "Exit: q or ESC",
 };
 
 void drawWalls(bool);
@@ -148,7 +149,6 @@ void setup(){
 
     sugarscape = Sugarscape(100);
     createTrees(2);
-    
 }
 static void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -161,13 +161,11 @@ static void display(void){
 
     drawWalls(true);
 
-    if( showMenu ){
-        glRasterPos2f(VIEW_WIDTH/2 - 50, VIEW_HEIGHT - 20);
-        drawString("Alife");
+    if( showMenu ){        
+        drawString("Alife", VIEW_WIDTH/2 - 50, VIEW_HEIGHT - 50);
 
-        for( int i = 0, h = 50; i < commands.size(); i++, h+=20){
-            glRasterPos2f(0.02 * VIEW_WIDTH, VIEW_HEIGHT - h);    
-            drawString(commands[i]);
+        for( int i = 0, h = 100; i < commands.size(); i++, h+=30){
+            drawString(commands[i], 0.02 * VIEW_WIDTH, VIEW_HEIGHT - h);
         }
 
         vector<pair<string, string>> dynamicCommands;
@@ -180,9 +178,9 @@ static void display(void){
         dynamicCommands.push_back( make_pair("Predators: ", to_string(predatorNum)) );
         dynamicCommands.push_back( make_pair("Velocity Factor: ", to_string(velocityFactor)) );
 
-        for( int i = 0, h = 50; i < dynamicCommands.size(); i++, h+=20){
-            glRasterPos2f(0.75 * VIEW_WIDTH, VIEW_HEIGHT - h);    
-            drawString(dynamicCommands[i].first + dynamicCommands[i].second);
+        for( int i = 0, h = 100; i < dynamicCommands.size(); i++, h+=30){
+            string dynamicCommand = dynamicCommands[i].first + dynamicCommands[i].second;
+            drawString(dynamicCommand, 0.65 * VIEW_WIDTH, VIEW_HEIGHT - h);
         }
     }
 
@@ -233,6 +231,15 @@ static void key(unsigned char key, int x, int y){
             break;
         case 'A':
         case 'a':
+            if( glutGetModifiers() & GLUT_ACTIVE_ALT ){
+                lastKeyCombination += " + ALT";
+                sugarscape.togglePresence();
+                predatorPrey.toggleDeathFromStarvation();
+                predatorPrey.togglePreys();
+                predatorPrey.togglePredators();
+                showTrees = !showTrees;
+                break;
+            }
             cameraX += step;
             break;
         case 'D':

@@ -22,7 +22,7 @@ class LSystem : public Figure {
         string axiom;
         string word;
         vector< pair<char, std::string> > rules;
-        float lineLength = 1.0;
+        float lineLength;
 	public:
 		LSystem();
 		LSystem(float, float, bool);
@@ -31,7 +31,7 @@ class LSystem : public Figure {
 		void setLineLength(float);
 		void generateWord();
 		void draw();
-		void setParams(int, float, string, vector< pair<char, string> >);
+		void setParams(int depth, float angle, string axiom, vector<pair<char, string>> rules, int lineLength);
 		void setTree(char);
 		void setRandom();
 		string toString();

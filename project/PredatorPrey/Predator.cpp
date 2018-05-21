@@ -4,7 +4,7 @@
 
 Predator::Predator(){}
 Predator::Predator(float x, float y) : Turtle(x, y) {
-  vision = 200;
+  vision = 300;
   life = 600;
 };
 

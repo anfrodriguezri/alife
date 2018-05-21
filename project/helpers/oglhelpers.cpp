@@ -4,11 +4,12 @@
 
 using namespace std;
 
-void drawString(std::string message){
-    std::string::iterator it = message.begin();
-
-    for (; it != message.end(); ++it)
-        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, *it);
+void drawString(std::string message, GLfloat x, GLfloat y){
+    glPushMatrix();
+		glTranslatef(x, y, 0);
+		glScalef(.18,.17,0);
+	    glutStrokeString(GLUT_STROKE_ROMAN, (unsigned char*)message.c_str());
+    glPopMatrix();
 }
 
 void drawLine(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2){

@@ -23,13 +23,13 @@ LSystem::LSystem(float x, float y, bool maximumVals){
     if( maximumVals ){
         float randx = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
         float randy = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-        x = randx * (0.8 * x ) + (0.1 * x);
-        y = randy * (0.8 * y ) + (0.1 * y);
+        x = randx * (0.7 * x ) + (0.3 * x);
+        y = randy * (0.7 * y ) + (0.0 * y);
     }
     setPosition(x, y);
 }
 LSystem::LSystem(int depth, float angle, string axiom, vector<pair<char, string>> rules){
-    setParams(depth, angle, axiom, rules);
+    setParams(depth, angle, axiom, rules, 3);
 }
 float LSystem::getLineLength(){
 	return lineLength;
@@ -102,13 +102,13 @@ void LSystem::draw(){
         }
     }
 };
-void LSystem::setParams(int depth, float angle, string axiom, vector<pair<char, string>> rules){
+void LSystem::setParams(int depth, float angle, string axiom, vector<pair<char, string>> rules, int lineLength){
     this->depth = depth;
     this->angle = angle;
     this->axiom = axiom;
     this->word = this->axiom;
     this->rules = rules;
-    this->lineLength = 1.5;
+    this->lineLength = lineLength;
     generateWord();
 }
 void LSystem::setTree(char code){
@@ -117,30 +117,30 @@ void LSystem::setTree(char code){
     switch(code){
         case 'A':
             rules.push_back( make_pair('F', "F[+F]F[-F]F") );
-            setParams(4, 25.7, "F", rules);
+            setParams(4, 25.7, "F", rules, 3);
             break;
         case 'B':
             rules.push_back( make_pair('F', "F[+F]F[-F][F]") );
-            setParams(5, 20, "F", rules);
+            setParams(5, 20, "F", rules, 3);
             break;
         case 'C':
             rules.push_back( make_pair('F', "FF-[-F+F+F]+[+F-F-F]") );
-            setParams(4, 22.5, "F", rules);
+            setParams(4, 22.5, "F", rules, 5);
             break;
         case 'D':
             rules.push_back( make_pair('X', "F[+X]F[-X]+X") );
             rules.push_back( make_pair('F', "FF") );
-            setParams(7, 20, "X", rules);
+            setParams(7, 20, "X", rules, 2);
             break;
         case 'E':
             rules.push_back( make_pair('X', "F[+X][-X]FX") );
             rules.push_back( make_pair('F', "FF") );
-            setParams(7, 25.7, "X", rules);
+            setParams(7, 25.7, "X", rules, 3.5);
             break;
         case 'F':
             rules.push_back( make_pair('X', "F-[[X]+X]+F[+FX]-X") );
             rules.push_back( make_pair('F', "FF") );
-            setParams(5, 22.5, "X", rules);
+            setParams(5, 22.5, "X", rules, 3);
             break;
     }
 }

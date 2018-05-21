@@ -35,7 +35,7 @@ int main(){
     	
     	collapseSand(sandpile2d, SIZE, SIZE );
  		printSandpile(sandpile2d, SIZE, SIZE);
-    }       
+    }
 }
 void fillSandpile(int** sandpile2d, size_t rows, size_t cols, bool random){
 	for (size_t i = 0; i < rows; ++i){
