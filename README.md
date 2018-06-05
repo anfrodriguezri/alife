@@ -1,6 +1,6 @@
 # Alife
 
-This repository contains a C++ implementation of an artificial society in a Prey Predator environment including some Artificial Life models seen in the Artificial Life course offered at Universidad Nacional de Colombia by professor Jonatan Gomez (Semester 2018 - I). At the core of these models we can see the evidence of emergence of behaviour from complex systems that use basic rules of local interactions.
+This repository contains a C++ implementation of an artificial society in a Prey Predator environment including some Artificial Life models seen in the Artificial Life course offered at Universidad Nacional de Colombia by professor Jonatan Gomez (Semester 2018 - I). At the core of these models we can see evidence of emergence of behaviour from complex systems that use basic rules for local interactions.
 
 The models included in the implementation are:
 
