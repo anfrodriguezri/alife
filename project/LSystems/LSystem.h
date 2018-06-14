@@ -13,7 +13,7 @@
 
 using namespace std;
 
-#include "../helpers/oglhelpers.h"
+#include "../helpers/helpers.h"
 #include "../Base/Figure.h"
 
 class LSystem : public Figure {

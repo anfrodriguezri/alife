@@ -5,15 +5,13 @@
 #include <tuple>
 #include <math.h>
 
-#include "../helpers/oglhelpers.h"
+#include "../helpers/helpers.h"
 
 using namespace std;
 
 Turtle::Turtle() {}
 
-float Turtle::desiredSeparation = 25;
-
-Turtle::Turtle(float x, float y) {
+Turtle::Turtle(float x, float y, float r, float g, float b, GLuint texture) {
 	acceleration.setXY( 0, 0 );
 	
 	float randFloat = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
@@ -25,9 +23,23 @@ Turtle::Turtle(float x, float y) {
 
 	maxSpeed = 2;
 	maxForce = 0.3;
-	sideLength = 8;
+	sideLength = 15;
 	life = 1;
 	vision = 50;
+
+	this->texture = texture;
+	this->r = r;
+	this->g = g;
+	this->b = b;
+}
+float Turtle::getR(){
+  return r;
+}
+float Turtle::getG(){
+  return g;
+}
+float Turtle::getB(){
+  return b;
 }
 Vector2d Turtle::getVelocity(){
 	return velocity;
@@ -37,6 +49,15 @@ Vector2d Turtle::getAcceleration(){
 }
 int Turtle::getLife(){
 	return life;
+}
+float Turtle::getVision(){
+	return vision;
+}
+float Turtle::getMaxSpeed(){
+	return maxSpeed;
+}
+void Turtle::setTexture(int texture){
+	this->texture = texture;
 }
 void Turtle::applyForce(Vector2d force){
 	acceleration.add(force);
@@ -61,15 +82,18 @@ void Turtle::borders(float width, float height) {
     if (y > height + sideLength) position.setY(-sideLength);
 }
 
-void Turtle::render(float r, float g, float b, bool starvationDeath){
+void Turtle::render(bool starvationDeath){
 	// Draw a triangle rotated in the direction of velocity
-	GLuint loadBMP_custom(const char * imagepath);
-	GLuint image = loadBMP_custom("./texture.bmp");
 	float theta = velocity.heading() * RADTODEG + 90;
 	glColor3f(r, g, b);
+	
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	drawTriangle(position.getX(), position.getY(), theta, sideLength);
+	glDisable(GL_TEXTURE_2D);
+	
 	if( starvationDeath ){
-		drawString(to_string(life), position.getX() - 20, position.getY() - 30);
+		drawString(to_string(life), position.getX() - 20, position.getY() - sideLength);
 	}
 }
 bool Turtle::isAlive(bool starvationDeath){
@@ -80,7 +104,7 @@ bool Turtle::run(float velocityFactor, float maxWidth, float maxHeight, bool sta
 
 	update(velocityFactor, starvationDeath);
 	borders(maxWidth, maxHeight);
-	render(1, 1, 1, starvationDeath);
+	render(starvationDeath);
 	
 	return true;
 }

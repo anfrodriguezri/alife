@@ -47,9 +47,9 @@ int main( int argc, char** argv ){
     srcTri[1] = Point2f( src.cols - 1.f, 0 );
     srcTri[2] = Point2f( 0, src.rows - 1.f );
 
-    dstTri[0] = Point2f( src.cols*0.0f, src.rows*0.25f );
-    dstTri[1] = Point2f( src.cols*.9f, src.rows*0.5f );
-    dstTri[2] = Point2f( src.cols*0.15f, src.rows*0.5f );
+    dstTri[0] = Point2f( src.cols*(pow(0.2f,2)-pow(.5,2)), src.rows*0.25f );
+    dstTri[1] = Point2f( src.cols*.5f, src.rows*sin(2*0.5f*.2) );
+    dstTri[2] = Point2f( src.cols*sin(0.15f)+cos(.3), src.rows*cos(0.9f) );
 
     warp_mat = getAffineTransform( srcTri, dstTri );
 

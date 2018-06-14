@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../helpers/oglhelpers.h"
+#include "../helpers/helpers.h"
 #include "Sandpile.h"
 
 Sandpile::Sandpile(){

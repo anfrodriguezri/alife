@@ -3,9 +3,12 @@
 #include "Predator.h"
 
 Predator::Predator(){}
-Predator::Predator(float x, float y) : Turtle(x, y) {
+
+Predator::Predator(float x, float y, float r, float g, float b, GLuint texture) : Turtle(x, y, r, g, b, texture) {
+  maxSpeed = 2;
   vision = 300;
   life = 600;
+  sideLength = 15;
 };
 
 Vector2d Predator::separate(vector<Predator> predators){
@@ -18,7 +21,7 @@ Vector2d Predator::separate(vector<Predator> predators){
 
 		float distance = Vector2d::dist(position, otherPosition);
 		
-		if ( distance > 0 && distance < Predator::desiredSeparation ) {
+		if ( distance > 0 && distance < 3*sideLength ) {
 			// Calculate vector pointing away from neighbor
 			Vector2d diff = Vector2d::sub(position, otherPosition);
 			diff.normalize();
@@ -60,7 +63,7 @@ void Predator::eat(vector<Boid>& preys, int hunted){
   life += 500;
 }
 Vector2d Predator::hunt(vector<Boid>& preys){
-  Vector2d closest;   // Start with empty vector to accumulate all positions
+  Vector2d close;   // Start with empty vector to accumulate all positions
   bool anyClose = false;
   
   for(int i = 0; i < preys.size(); i++) {
@@ -73,11 +76,11 @@ Vector2d Predator::hunt(vector<Boid>& preys){
 
     if( distance > 0 && distance < vision) {
       anyClose = true;
-      closest = otherPosition;
+      close = otherPosition;
     }
   }
   if( anyClose )
-    return seek(closest);
+    return seek(close);
   else
     return Vector2d();
 }
@@ -98,7 +101,7 @@ bool Predator::run(vector<Predator>& predators, vector<Boid>& preys,
   move(predators, preys);
   update(velocityFactor, starvationDeath);
   borders(maxWidth, maxHeight);
-  render(1, 0, 0, starvationDeath);
+  render(starvationDeath);
 
   return true;
 }

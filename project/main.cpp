@@ -14,12 +14,13 @@
 #include <iterator>
 #include <tuple>
 
-#include "helpers/oglhelpers.h"
+#include "helpers/helpers.h"
 #include "LSystems/LSystem.h"
 #include "Flocking/Boid.h"
 #include "PredatorPrey/PredatorPrey.h"
 #include "PredatorPrey/Predator.h"
 #include "Sugarscape/Sugarscape.h"
+#include "TuringPattern/TuringPattern.h"
 
 
 #define WINDOW_TITLE_PREFIX "Alife"
@@ -42,6 +43,8 @@ int cameraX;
 int cameraY;
 int cameraZ;
 
+float r, g, b;
+
 vector<LSystem> lsystems;
 PredatorPrey<Boid, Predator> predatorPrey;
 Sugarscape sugarscape;
@@ -51,6 +54,8 @@ bool showTrees;
 
 bool debugMode;
 bool spaceBarPressed;
+
+int ticks;
 
 string lastKeyCombination;
 
@@ -67,6 +72,10 @@ vector<string> commands {
     "Play/Pause: SPACEBAR",
     "Exit: q or ESC",
 };
+
+TuringPattern tp;
+GLuint texture;
+
 
 void drawWalls(bool);
 void createTrees(int);
@@ -89,7 +98,9 @@ int main(int argc, char *argv[]){
     glutKeyboardFunc( key );
     glutTimerFunc(0, TimerFunction, 0);
     glutIdleFunc( idle );
-    glClearColor(0, 0, 0, 1);
+    glClearColor(1, 1, 1, 1);
+
+    glEnable(GL_DEPTH_TEST);
 
     setup();
     
@@ -98,13 +109,13 @@ int main(int argc, char *argv[]){
     return EXIT_SUCCESS;
 }
 void drawWalls(bool draw){
+    glColor3f(1, 1, 1);
     if( draw ){
         drawLine(0, 0, 0, VIEW_HEIGHT);
         drawLine(0, 0, VIEW_WIDTH, 0);
         drawLine(0, VIEW_HEIGHT, VIEW_WIDTH, VIEW_HEIGHT);
         drawLine(VIEW_WIDTH, 0, VIEW_WIDTH, VIEW_HEIGHT);
     }
-
 }
 void createTrees(int numTrees){
     for( int i = 0; i < numTrees; i++ ){
@@ -120,6 +131,7 @@ void createTrees(int numTrees){
 void setup(){
     velocityFactor = 1;
     FrameCount = 0;
+    ticks = 0;
 
     step = 20;
 
@@ -137,27 +149,40 @@ void setup(){
 
     lastKeyCombination = "";
 
+    tp = TuringPattern();
+    texture = tp.create();
+
     predatorPrey = PredatorPrey<Boid, Predator>();
     // Add an initial set of boids into the system
-    for (int i = 0; i < 20; i++) {
-        predatorPrey.addPrey( Boid(VIEW_WIDTH/2, VIEW_WIDTH/2) );
+
+
+    r = randFloat(0.5,1);
+    g = randFloat(0, 0.5);
+    b = 0;
+    for (int i = 0; i < 3; i++) {
+        predatorPrey.addPredator( Predator(0.1*VIEW_WIDTH, 0.1*VIEW_HEIGHT, r, g, b, texture) );
     }
 
-    for (int i = 0; i < 5; i++) {
-        predatorPrey.addPredator( Predator(0.1*VIEW_WIDTH, 0.1*VIEW_HEIGHT) );
+    r = 0;
+    g = randFloat(0, 0.5);
+    b = randFloat(0.5,1);
+    
+    for (int i = 0; i < 15; i++) {
+        float x = randFloat(0, 1) * VIEW_WIDTH;
+        float y = randFloat(0, 1) * VIEW_HEIGHT;
+        predatorPrey.addPrey( Boid(x, y, r, g, b, texture) );
     }
 
     sugarscape = Sugarscape(100);
     createTrees(2);
 }
+
 static void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
     glTranslatef(cameraX, 0, 0);
     glTranslatef(0, cameraY, 0);
-
-    glColor3f(1, 1, 1);
 
     drawWalls(true);
 
@@ -189,23 +214,32 @@ static void display(void){
             lsystems[i].draw();
         }   
     }
-
+    if( ticks % 200 == 0 || ticks % 200 == 1 ){
+        predatorPrey.toggleReproducing();
+    }
     if( !debugMode && spaceBarPressed || debugMode && spaceBarPressed ){
         if( debugMode)
             spaceBarPressed = false;
 
-        predatorPrey.run(sugarscape, velocityFactor, VIEW_WIDTH, VIEW_HEIGHT);
-
         sugarscape.run();
     }else{
+        int numOfReproductions = predatorPrey.run(sugarscape, velocityFactor, VIEW_WIDTH, VIEW_HEIGHT);
+        //cout << numOfReproductions << endl;
+        for( int i = 0; i < numOfReproductions; i++ ){
+            float x = randFloat(0, 1) * VIEW_WIDTH;
+            float y = randFloat(0, 1) * VIEW_HEIGHT;
+            predatorPrey.addPrey( Boid(x, y, r, g, b, texture) );            
+        }
+
         predatorPrey.render();
 
         sugarscape.render();
     }
 
     ++FrameCount;
-
+    ticks++;
     glutSwapBuffers();
+    glFlush();
 }
 
 static void key(unsigned char key, int x, int y){

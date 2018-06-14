@@ -15,7 +15,7 @@ class Predator: public Turtle {
 
     public:
         Predator();
-        Predator(float, float);
+        Predator(float x, float y, float r, float g, float b, GLuint texture);
         virtual ~Predator();
         Vector2d separate(vector<Predator>);
         Vector2d seek(Vector2d);

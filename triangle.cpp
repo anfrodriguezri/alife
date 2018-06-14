@@ -1,4 +1,4 @@
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <iostream>
 #include <math.h>
 #include <SOIL.h>
@@ -11,7 +11,7 @@ int LoadGLTextures()
 {
     texture[0] = SOIL_load_OGL_texture
         (
-        "zebra.png",
+        "./project/skins/alpha.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_INVERT_Y
@@ -46,9 +46,7 @@ void ChangeSize(int w, int h)
               0.0f,1.0f,0.0f);
 }
 void drawTriangle(GLfloat x, GLfloat y, GLfloat theta, GLfloat sideLength){
-	glPushMatrix();
-		// glEnable(GL_TEXTURE_2D);
-	 //    glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glPushMatrix();        
 		glTranslatef(x, y, 0);
 	    glRotatef(theta, 0, 0, 1);
 
@@ -57,6 +55,7 @@ void drawTriangle(GLfloat x, GLfloat y, GLfloat theta, GLfloat sideLength){
 	        glTexCoord2f(1.0f, 1.0f); glVertex3f(-sideLength, sideLength*2, 0);
 	        glTexCoord2f(1.0f, 0.0f); glVertex3f(sideLength, sideLength*2, 0);
 	    glEnd();
+        
     glPopMatrix();
 }
 void display(void)
@@ -66,15 +65,16 @@ void display(void)
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture[0]);
 
-    drawTriangle(0, 0, 0, 1);
-    // glBegin(GL_QUADS);
+    drawTriangle(0, 0, 0, .2);
+    glDisable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
 
-    // glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-    // glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-    // glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
-    // glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.2f, -0.2f,  0.2f);
+    glTexCoord2f(.5f, 0.0f); glVertex3f( 0.2f, -0.2f,  0.2f);
+    glTexCoord2f(.5f, 0.2f); glVertex3f( 0.2f,  0.2f,  0.2f);
+    glTexCoord2f(0.0f, .5f); glVertex3f(-0.2f,  0.2f,  0.2f);
 
-    // glEnd();
+    glEnd();
 
     glFlush();
 }

@@ -15,6 +15,7 @@ class PredatorPrey {
         bool preysPresent;
         bool predatorsPresent;
         bool starvationDeath;
+        bool reproducing;
     public:
         PredatorPrey();
         vector<T> getPreys();
@@ -24,9 +25,10 @@ class PredatorPrey {
         void togglePreys();
         void togglePredators();
         void toggleDeathFromStarvation();
-        void runPreys(Sugarscape sugarscape, float velocityFactor, float maxWidth, float maxHeight);
+        void toggleReproducing();
+        int runPreys(Sugarscape sugarscape, float velocityFactor, float maxWidth, float maxHeight);
         void runPredators(float velocityFactor, float maxWidth, float maxHeight);
-        void run(Sugarscape sugarscape, float velocityFactor, float maxWidth, float maxHeight);
+        int run(Sugarscape sugarscape, float velocityFactor, float maxWidth, float maxHeight);
         void addPrey(T);
         void addPredator(U);
         void renderPreys();

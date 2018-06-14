@@ -16,6 +16,7 @@ class Sugarscape {
 		Sugarscape();
 		Sugarscape(float capacity);
 		void togglePresence();
+		bool isPresent();
 		float getCapacity();
 		vector<Sandpile> getSandpiles();
 		void addSandpile(Sandpile);

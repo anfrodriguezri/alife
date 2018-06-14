@@ -11,7 +11,9 @@ Sugarscape::Sugarscape(float capacity){
 void Sugarscape::togglePresence(){
 	present = !present;
 }
-
+bool Sugarscape::isPresent(){
+	return present;
+}
 float Sugarscape::getCapacity(){
 	return capacity;
 }

@@ -1,10 +1,10 @@
 CC = g++
-FLAGS = -std=c++11 -lglut -lGL -lGLEW -lGLU -Wfatal-errors
+FLAGS = -std=c++11 -lglut -lGL -lGLEW -lGLU -Wfatal-errors -lSOIL `pkg-config --cflags --libs opencv` 
 
 all: main
 
-main: main.o oglhelpers.o Vector2d.o Figure.o Turtle.o LSystem.o Boid.o PredatorPrey.o Predator.o Sandpile.o Sugarscape.o
-	$(CC) oglhelpers.o \
+main: main.o helpers.o Vector2d.o Figure.o Turtle.o LSystem.o Boid.o PredatorPrey.o Predator.o Sandpile.o Sugarscape.o TuringPattern.o
+	$(CC) helpers.o \
 		Vector2d.o \
 		Figure.o \
 		Turtle.o \
@@ -14,14 +14,15 @@ main: main.o oglhelpers.o Vector2d.o Figure.o Turtle.o LSystem.o Boid.o Predator
 		Predator.o \
 		Sandpile.o \
 		Sugarscape.o \
+		TuringPattern.o \
 		main.o $(FLAGS) -o \
 		main 
 
 main.o: main.cpp
 	$(CC) -c $(FLAGS) main.cpp
 
-oglhelpers.o: ./helpers/oglhelpers.cpp
-	$(CC) -c $(FLAGS) ./helpers/oglhelpers.cpp
+helpers.o: ./helpers/helpers.cpp
+	$(CC) -c $(FLAGS) ./helpers/helpers.cpp
 
 Vector2d.o: ./Base/Vector2d.cpp
 	$(CC) -c $(FLAGS) ./Base/Vector2d.cpp
@@ -50,7 +51,10 @@ Sandpile.o: ./Sugarscape/Sandpile.cpp
 Sugarscape.o: ./Sugarscape/Sugarscape.cpp
 	$(CC) -c $(FLAGS) ./Sugarscape/Sugarscape.cpp
 
-run:
+TuringPattern.o: ./TuringPattern/TuringPattern.cpp
+	$(CC) -c $(FLAGS) ./TuringPattern/TuringPattern.cpp
+
+run: main.o
 	./main
 
 clean:
