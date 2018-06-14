@@ -17,8 +17,5 @@ lsystems:
 affineTransform:
 	g++ -ggdb ./AffineTransform/affineTransform.cpp -o ./AffineTransform/affineTransform \
 				`pkg-config --cflags --libs opencv` && ./AffineTransform/affineTransform $(file)
-fractalDim:
-	g++ -ggdb ./FractalDim/fractalDim.cpp -o ./FractalDim/fractalDim \
-				`pkg-config --cflags --libs opencv` && ./FractalDim/fractalDim $(file)
 triangle: triangle.o
 	g++ triangle.cpp -o triangle -std=c++11 -lglut -lGL -lGLEW -lGLU -lSOIL && ./triangle
